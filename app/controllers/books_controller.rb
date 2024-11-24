@@ -4,9 +4,13 @@ class BooksController < ApplicationController
   end
 
   def create
-    book = Book.new
-    book.save
-    redirect_to 
+    book = Book.new(book_params)
+    
+    if book.save
+      redirect_to book_path(book.id)
+    else
+      render 'new'
+    end
   end
 
   def show
@@ -16,10 +20,18 @@ class BooksController < ApplicationController
   def index
     @books = Book.all  # Bookモデルから全てのデータを取得して@booksに代入する例
   end
+
+  private
+  def book_params
+    params.require(:book).permit(:title, :body)
+  end
 end
 
-  def show
-  end
 
-  def edit
+def edit
+  @book = Book.find_by(id: params[:id])
+  if @book.nil?
+    flash[:error] = "Book not found"
+    redirect_to root_path
   end
+end

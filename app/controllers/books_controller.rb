@@ -21,6 +21,29 @@ class BooksController < ApplicationController
     @books = Book.all  # Bookモデルから全てのデータを取得して@booksに代入する例
   end
 
+  def edit
+    @book = Book.find_by(id: params[:id])
+    if @book.nil?
+      flash[:error] = "Book not found"
+      redirect_to root_path
+    end
+  end
+
+  def destroy
+    @book = Book.find(params[:id])
+    @book.destroy
+    redirect_to books_path, notice: "Book was successfully deleted."
+  end
+
+  def update
+    @book = Book.find(params[:id])
+    if @book.update(book_params)
+      redirect_to @book
+    else
+      render 'edit'
+    end
+  end
+
   private
   def book_params
     params.require(:book).permit(:title, :body)
@@ -28,10 +51,3 @@ class BooksController < ApplicationController
 end
 
 
-def edit
-  @book = Book.find_by(id: params[:id])
-  if @book.nil?
-    flash[:error] = "Book not found"
-    redirect_to root_path
-  end
-end

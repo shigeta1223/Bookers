@@ -1,6 +1,39 @@
-<h2>title</h2>
-<p><%= @book.title %></p>
+<% if flash[:success].present? %>
+  <div class="alert alert-danger">
+    <%= flash[:success] %>
+  </div>
+<% end %>
 
-<h2>body</h2>
-<p><%= @book.body %></p>
+<p>
+<strong>Title:</strong>
+<% if @book.errors.any? %>
+  <%= @book.errors.count %> errors prohibited this book from being saved:
+  <ul>
+    <% @book.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if flash[:error].present? %>
+  <div class="alert alert-danger">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+<%= @book.title %></p>
+<p id="notice"></p>
+
+</head>
+
+<body>
+ 
+
+
+<p>
+<strong>Body:</strong>
+<%= @book.body %>
+</p>
 <%= link_to "Edit", edit_book_path(@book.id) %> | <%= link_to "Back", books_path %>
+
+</body>
+</html>
